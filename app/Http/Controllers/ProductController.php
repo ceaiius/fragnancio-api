@@ -13,9 +13,9 @@ class ProductController extends Controller
     public function home(): JsonResponse
     {
         return response()->json([
-            'suggested' => Product::inRandomOrder()->take(8)->get(),
-            'popular' => Product::inRandomOrder()->take(8)->get(),
-            'recently_viewed' => Product::latest()->take(8)->get(),
+            'suggested' => Product::inRandomOrder()->take(12)->get(),
+            'popular' => Product::inRandomOrder()->take(12)->get(),
+            'recently_viewed' => Product::latest()->take(6)->get(),
         ]);
     }
 
@@ -41,5 +41,20 @@ class ProductController extends Controller
         $products = $category->products()->paginate(12);
 
         return response()->json($products);
+    }
+
+    public function suggested(Request $request)
+    {
+        return Product::latest()->paginate(10);
+    }
+
+    public function popular(Request $request)
+    {
+        return Product::inRandomOrder()->paginate(10);
+    }
+
+    public function recentlyViewed(Request $request)
+    {
+        return Product::inRandomOrder()->paginate(10); 
     }
 }

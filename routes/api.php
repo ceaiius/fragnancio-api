@@ -31,10 +31,16 @@ Route::controller(AuthController::class)->middleware(['auth:api'])->group(functi
 });
 
 Route::controller(ProductController::class)->group(function () {
-    Route::get('/home', [ProductController::class, 'home']);
-    Route::get('/products', [ProductController::class, 'index']);
-    Route::get('/products/{product}', [ProductController::class, 'show']); 
-    Route::get('/categories/{slug}/products', [ProductController::class, 'byCategory']);
+    Route::get('/home', 'home');
+    Route::get('/products', 'index');
+    Route::get('/products/{product}', 'show');
+    Route::get('/categories/{slug}/products', 'byCategory');
+});
+
+Route::prefix('home')->controller(ProductController::class)->group(function () {
+    Route::get('/suggested', 'suggested');
+    Route::get('/popular', 'popular');
+    Route::get('/recently-viewed', 'recentlyViewed');
 });
 
 
