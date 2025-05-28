@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +28,13 @@ Route::controller(AuthController::class)->group(function () {
 Route::controller(AuthController::class)->middleware(['auth:api'])->group(function () {
     Route::get('/me', 'me');
     Route::post('/logout', 'logout');
+});
+
+Route::controller(ProductController::class)->group(function () {
+    Route::get('/home', [ProductController::class, 'home']);
+    Route::get('/products', [ProductController::class, 'index']);
+    Route::get('/products/{product}', [ProductController::class, 'show']); 
+    Route::get('/categories/{slug}/products', [ProductController::class, 'byCategory']);
 });
 
 
