@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -42,6 +43,13 @@ Route::prefix('home')->controller(ProductController::class)->group(function () {
     Route::get('/popular', 'popular');
     Route::get('/recently-viewed', 'recentlyViewed');
 });
+
+Route::controller(BrandController::class)->group(function () {
+    Route::get('/brands', 'index');
+    Route::get('/brands/{slug}/products', 'show');
+});
+
+
 
 
 

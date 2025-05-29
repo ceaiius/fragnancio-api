@@ -2,9 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Brand;
+
 
 class BrandController extends Controller
 {
-    //
+
+
+    public function index() {
+        return Brand::all();
+    }
+
+
+    public function show($slug) {
+        $brand = Brand::where('slug', $slug)->firstOrFail();
+        return $brand->products()->paginate(12);
+    }
+
 }
