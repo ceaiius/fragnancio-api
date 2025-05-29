@@ -15,11 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->string('brand');
             $table->decimal('price', 10, 2);
             $table->integer('size');
             $table->string('image')->nullable();
             $table->enum('gender', ['men', 'women', 'unisex']);
+            $table->foreignId('brand_id')
+                  ->constrained()
+                  ->onDelete('cascade');
             $table->foreignId('category_id')
                   ->constrained()
                   ->onDelete('cascade');

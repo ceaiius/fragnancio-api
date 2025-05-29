@@ -19,11 +19,11 @@ class ProductFactory extends Factory
         return [
             'title' => $this->faker->words(3, true),
             'description' => $this->faker->paragraph(),
-            'brand' => $this->faker->words(2, true),
             'price' => $this->faker->randomFloat(2, 30, 300),
             'size' => $this->faker->randomElement([30, 50, 75, 100]),
             'image' => $this->faker->imageUrl(640, 480, 'fashion', true, 'perfume'),
             'gender' => $this->faker->randomElement(['men', 'women', 'unisex']),
+            'brand_id' => \App\Models\Brand::inRandomOrder()->first()?->id ?? \App\Models\Brand::factory(),
             'category_id' => \App\Models\Category::inRandomOrder()->first()?->id ?? \App\Models\Category::factory(),
         ];
     }
