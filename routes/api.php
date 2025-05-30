@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\NoteController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -49,6 +51,8 @@ Route::controller(BrandController::class)->group(function () {
     Route::get('/brands/{slug}/products', 'show');
 });
 
+Route::get('/categories', [CategoryController::class, 'index']);
+Route::get('/notes', [NoteController::class, 'index']);
 
 
 
