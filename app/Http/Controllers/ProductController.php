@@ -25,16 +25,8 @@ class ProductController extends Controller
         ]);
     }
 
-    public function index(Request $request): AnonymousResourceCollection
-    {
-        $query = Product::query()->with('brand');
 
-        if ($request->has('type')) {
-            $query->where('gender', $request->type);
-        }
 
-        return ProductResource::collection($query->paginate(12));
-    }
 
     public function show(Product $product): ProductResource
     {
@@ -42,11 +34,45 @@ class ProductController extends Controller
         return new ProductResource($product);
     }
 
-    public function byCategory($slug): AnonymousResourceCollection
+    public function byCategory(Request $request, $slug)
     {
         $category = Category::where('slug', $slug)->firstOrFail();
-        $products = $category->products()->with('brand')->paginate(12);
+        $query = $category->products()->with(['brand', 'notes']);
+        
+        if ($request->filled('brand')) {
+            $query->whereHas('brand', function ($q) use ($request) {
+                $q->where('name', $request->brand);
+            });
+        }
 
+        if ($request->filled('note')) {
+            $query->whereHas('notes', function ($q) use ($request) {
+                $q->where('name', $request->note);
+            });
+        }
+
+        if ($request->filled('price_min')) {
+            $query->where('price', '>=', $request->price_min);
+        }
+
+        if ($request->filled('price_max')) {
+            $query->where('price', '<=', $request->price_max);
+        }
+
+        if ($request->filled('size')) {
+            $query->where('size', $request->size);
+        }
+
+        if ($request->filled('condition')) {
+            $query->where('condition', $request->condition);
+        }
+
+        if ($request->boolean('on_sale')) {
+            $query->where('on_sale', true);
+        }
+
+        $products = $query->paginate(12);
+    
         return ProductResource::collection($products);
     }
 

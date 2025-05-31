@@ -20,6 +20,9 @@ class ProductResource extends JsonResource
             'brand' => $this->whenLoaded('brand', function () {
                 return $this->brand ? $this->brand->name : null;
             }),
+            'notes' => $this->whenLoaded('notes', function () {
+                return $this->notes->pluck('name');
+            }),
             'image' => $this->image,
             'size' => $this->size,
             'price' => (float) $this->price, // Good to cast

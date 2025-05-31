@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->decimal('price', 10, 2);
             $table->integer('size');
+            $table->string('condition');
             $table->string('image')->nullable();
             $table->enum('gender', ['men', 'women', 'unisex']);
             $table->foreignId('brand_id')

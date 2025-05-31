@@ -17,7 +17,7 @@ class CategoryFactory extends Factory
      */
     public function definition(): array
     {
-        $name = $this->faker->unique()->randomElement(['Men', 'Women', 'Unisex', 'Brands', 'Sale']);
+        $name = $this->faker->unique()->randomElement(['Men', 'Women', 'Unisex']);
         return [
             'name' => $name,
             'slug' => Str::slug($name),

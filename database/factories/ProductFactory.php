@@ -21,6 +21,7 @@ class ProductFactory extends Factory
             'description' => $this->faker->paragraph(),
             'price' => $this->faker->randomFloat(2, 30, 300),
             'size' => $this->faker->randomElement([30, 50, 75, 100]),
+            'condition' => $this->faker->randomElement(['new with box', 'new without box', 'used']),
             'image' => $this->faker->imageUrl(640, 480, 'fashion', true, 'perfume'),
             'gender' => $this->faker->randomElement(['men', 'women', 'unisex']),
             'brand_id' => \App\Models\Brand::inRandomOrder()->first()?->id ?? \App\Models\Brand::factory(),
