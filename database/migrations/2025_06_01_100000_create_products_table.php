@@ -20,12 +20,9 @@ return new class extends Migration
             $table->string('condition');
             $table->string('image')->nullable();
             $table->enum('gender', ['men', 'women', 'unisex']);
-            $table->foreignId('brand_id')
-                  ->constrained()
-                  ->onDelete('cascade');
-            $table->foreignId('category_id')
-                  ->constrained()
-                  ->onDelete('cascade');
+            $table->foreignId('sale_id')->nullable()->constrained('sales')->onDelete('set null');
+            $table->foreignId('brand_id')->constrained()->onDelete('cascade');
+            $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

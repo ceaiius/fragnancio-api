@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Sale;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,6 +17,9 @@ class ProductFactory extends Factory
      */
     public function definition(): array
     {
+        $isOnSale = $this->faker->boolean(30); 
+        $sale = $isOnSale ? Sale::inRandomOrder()->first() ?? Sale::factory()->create() : null;
+
         return [
             'title' => $this->faker->words(3, true),
             'description' => $this->faker->paragraph(),
@@ -26,6 +30,7 @@ class ProductFactory extends Factory
             'gender' => $this->faker->randomElement(['men', 'women', 'unisex']),
             'brand_id' => \App\Models\Brand::inRandomOrder()->first()?->id ?? \App\Models\Brand::factory(),
             'category_id' => \App\Models\Category::inRandomOrder()->first()?->id ?? \App\Models\Category::factory(),
+            'sale_id' => $sale?->id,
         ];
     }
 }

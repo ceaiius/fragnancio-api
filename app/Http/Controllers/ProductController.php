@@ -37,11 +37,11 @@ class ProductController extends Controller
     public function byCategory(Request $request, $slug)
     {
         $category = Category::where('slug', $slug)->firstOrFail();
-        $query = $category->products()->with(['brand', 'notes']);
+        $query = $category->products()->with(['brand', 'notes', 'sale']);
         
         if ($request->filled('brand')) {
             $query->whereHas('brand', function ($q) use ($request) {
-                $q->where('name', $request->brand);
+                $q->where('slug', $request->brand);
             });
         }
 
@@ -68,11 +68,10 @@ class ProductController extends Controller
         }
 
         if ($request->boolean('on_sale')) {
-            $query->where('on_sale', true);
+            $query->whereNotNull('sale_id');
         }
 
         $products = $query->paginate(12);
-    
         return ProductResource::collection($products);
     }
 
