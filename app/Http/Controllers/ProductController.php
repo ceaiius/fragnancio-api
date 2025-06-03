@@ -36,11 +36,17 @@ class ProductController extends Controller
 
     public function byCategory(Request $request, $slug)
     {
-
-        $category = Category::where('slug', $slug)->firstOrFail();
-        $query = $category->products()->with(['brand', 'notes', 'sale'])
-            ->filter($request)
-            ->sort($request->input('sort', 'relevance'));
+        if ($slug === 'sale') {
+            $query = Product::with(['brand', 'notes', 'sale'])
+                ->whereNotNull('sale_id')
+                ->filter($request)
+                ->sort($request->input('sort', 'relevance'));
+        } else {
+            $category = Category::where('slug', $slug)->firstOrFail();
+            $query = $category->products()->with(['brand', 'notes', 'sale'])
+                ->filter($request)
+                ->sort($request->input('sort', 'relevance'));
+        }
 
         $products = $query->paginate(12);
         return ProductResource::collection($products);
