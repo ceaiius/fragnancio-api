@@ -36,40 +36,11 @@ class ProductController extends Controller
 
     public function byCategory(Request $request, $slug)
     {
+
         $category = Category::where('slug', $slug)->firstOrFail();
-        $query = $category->products()->with(['brand', 'notes', 'sale']);
-        
-        if ($request->filled('brand')) {
-            $query->whereHas('brand', function ($q) use ($request) {
-                $q->where('slug', $request->brand);
-            });
-        }
-
-        if ($request->filled('note')) {
-            $query->whereHas('notes', function ($q) use ($request) {
-                $q->where('name', $request->note);
-            });
-        }
-
-        if ($request->filled('price_min')) {
-            $query->where('price', '>=', $request->price_min);
-        }
-
-        if ($request->filled('price_max')) {
-            $query->where('price', '<=', $request->price_max);
-        }
-
-        if ($request->filled('size')) {
-            $query->where('size', $request->size);
-        }
-
-        if ($request->filled('condition')) {
-            $query->where('condition', $request->condition);
-        }
-
-        if ($request->boolean('on_sale')) {
-            $query->whereNotNull('sale_id');
-        }
+        $query = $category->products()->with(['brand', 'notes', 'sale'])
+            ->filter($request)
+            ->sort($request->input('sort', 'relevance'));
 
         $products = $query->paginate(12);
         return ProductResource::collection($products);
