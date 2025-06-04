@@ -39,6 +39,7 @@ Route::controller(ProductController::class)->group(function () {
     Route::get('/products', 'index');
     Route::get('/products/{product}', 'show');
     Route::get('/categories/{slug}/products', 'byCategory');
+    Route::get('/search', 'search');
 });
 
 Route::prefix('home')->controller(ProductController::class)->group(function () {
@@ -54,7 +55,6 @@ Route::controller(BrandController::class)->group(function () {
 
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/notes', [NoteController::class, 'index']);
-
 
 
 

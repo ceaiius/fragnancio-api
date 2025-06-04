@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Laravel\Scout\Searchable;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
 
     protected $fillable = [
         'name',
@@ -20,6 +22,16 @@ class Product extends Model
         'image',
         'size'
     ];
+
+    public function apply(Builder $query, array $filters)
+    {
+        foreach ($filters as $method => $value) {
+            if (method_exists($this, $method) && !empty($value)) {
+                $this->$method($query, $value);
+            }
+        }
+        return $query;
+    }
 
     public function category(): BelongsTo
     {
@@ -98,6 +110,49 @@ class Product extends Model
                 break;
         }
         return $query;
+    }
+
+    protected function priceMin($query, $value)
+    {
+        $query->where('price', '>=', $value);
+    }
+
+    protected function priceMax($query, $value)
+    {
+        $query->where('price', '<=', $value);
+    }
+
+    protected function size($query, $value)
+    {
+        $query->where('size', $value);
+    }
+
+    protected function condition($query, $value)
+    {
+        $query->where('condition', $value);
+    }
+
+    protected function onSale($query, $value)
+    {
+        if ($value) {
+            $query->whereNotNull('sale_id');
+        }
+    }
+
+    public function toSearchableArray()
+    {
+
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'description' => $this->description,
+            'price' => $this->price,
+            'size' => (string) $this->size, // Cast to string
+            'condition' => $this->condition,
+            'brand' => $this->brand?->name,
+            'category' => $this->category?->name,
+            'image' => $this->image,
+        ];
     }
 
 }

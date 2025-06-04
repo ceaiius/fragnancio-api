@@ -67,4 +67,18 @@ class ProductController extends Controller
         $products = Product::with('brand')->inRandomOrder()->paginate(10);
         return ProductResource::collection($products);
     }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('q');
+    
+        $products = Product::search($query)
+            ->query(function ($query) use ($request) {
+                $query->filter($request)
+                      ->sort($request->input('sort', 'relevance'));
+            });
+
+        return ProductResource::collection($products->paginate(12));
+    }
+
 }
