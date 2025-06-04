@@ -30,8 +30,9 @@ Route::controller(AuthController::class)->group(function () {
 
 Route::controller(AuthController::class)->middleware(['auth:api'])->group(function () {
     Route::get('/me', 'me');
-    Route::post('/logout', 'logout');
 });
+
+Route::post('/logout', [AuthController::class, 'logout']);
 
 Route::controller(ProductController::class)->group(function () {
     Route::get('/home', 'home');

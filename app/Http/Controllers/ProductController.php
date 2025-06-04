@@ -14,9 +14,9 @@ class ProductController extends Controller
 {
     public function home(): JsonResponse
     {
-        $suggested = Product::with('brand')->inRandomOrder()->take(12)->get();
-        $popular = Product::with('brand')->inRandomOrder()->take(12)->get();
-        $recentlyViewed = Product::with('brand')->latest()->take(6)->get();
+        $suggested = Product::with(['brand', 'sale'])->inRandomOrder()->take(12)->get();
+        $popular = Product::with(['brand', 'sale'])->inRandomOrder()->take(12)->get();
+        $recentlyViewed = Product::with(['brand', 'sale'])->latest()->take(6)->get();
 
         return response()->json([
             'suggested' => ProductResource::collection($suggested),
