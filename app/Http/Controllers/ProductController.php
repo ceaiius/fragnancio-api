@@ -25,9 +25,6 @@ class ProductController extends Controller
         ]);
     }
 
-
-
-
     public function show(Product $product): ProductResource
     {
         $product->loadMissing('brand');
