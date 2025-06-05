@@ -71,11 +71,21 @@ class ProductController extends Controller
     public function search(Request $request)
     {
         $query = $request->input('q');
-    
+        $sort = $request->input('sort', 'relevance');
+        $index = 'products';
+
+        if ($sort === 'price_asc') {
+            $index = 'products_price_asc';
+        } elseif ($sort === 'price_desc') {
+            $index = 'products_price_desc';
+        } elseif ($sort === 'newest') {
+            $index = 'products_id_desc';
+        }
+
         $products = Product::search($query)
+            ->within($index)
             ->query(function ($query) use ($request) {
-                $query->filter($request)
-                      ->sort($request->input('sort', 'relevance'));
+                $query->filter($request);
             });
 
         return ProductResource::collection($products->paginate(12));
