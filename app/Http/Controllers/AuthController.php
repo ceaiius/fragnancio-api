@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Requests\Auth\UpdateCredentialsRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -45,5 +46,30 @@ class AuthController extends Controller
     {
         auth()->logout();
         return response()->json(['message' => 'Successfully logged out']);
+    }
+
+    public function updateCredentials(UpdateCredentialsRequest $request): JsonResponse
+    {
+        $validated = $request->validated();
+        $user = auth()->user();
+
+        if (isset($validated['username'])) {
+            $user->username = $validated['username'];
+        }
+
+        if (isset($validated['email'])) {
+            $user->email = $validated['email'];
+        }
+
+        if (isset($validated['password'])) {
+            $user->password = bcrypt($validated['password']);
+        }
+
+        $user->save();
+
+        return response()->json([
+            'message' => 'Credentials updated successfully',
+            'user' => $user
+        ]);
     }
 }
